@@ -30,7 +30,7 @@ in
   }];
   nix.settings = {
     cores = 8;
-    max-jobs = 6;
+    max-jobs = 4;
   };
 
   networking.hostName = "nix-nexus"; # Define your hostname.
@@ -168,7 +168,7 @@ in
     docker-compose
     tmux
     #koboldcpp
-    (pkgs.llama-cpp.override { cudaSupport = true; })
+    #(pkgs.llama-cpp.override { cudaSupport = true; })
     vlc
     libX11
   ];
