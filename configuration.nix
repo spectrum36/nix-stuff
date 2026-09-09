@@ -26,12 +26,12 @@ in
   #temp settings to build cuda
   swapDevices = [{
     device = "/swap";
-    size = 32 * 1024;
+    size = 16 * 1024;
   }];
-  nix.settings = {
-    cores = 8;
-    max-jobs = 4;
-  };
+  #nix.settings = {
+  #  cores = 8;
+  #  max-jobs = 4;
+  #};
 
   networking.hostName = "nix-nexus"; # Define your hostname.
   networking.firewall = {
@@ -168,7 +168,7 @@ in
     docker-compose
     tmux
     #koboldcpp
-    #(pkgs.llama-cpp.override { cudaSupport = true; })
+    (pkgs.llama-cpp.override { cudaSupport = true; })
     vlc
     libX11
   ];
@@ -180,6 +180,9 @@ in
   };
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
+
+  services.logind.settings.Login.HandleLidSwitch = "ignore";
+
 
   # nvidia config
   hardware.graphics = { 
