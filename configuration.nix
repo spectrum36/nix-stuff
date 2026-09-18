@@ -21,7 +21,6 @@ in
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_7_1;
   boot.supportedFilesystems = [ "nfs" ];
-  programs.nix-ld.enable = true;
 
   #temp settings to build cuda
   swapDevices = [{
@@ -132,8 +131,8 @@ in
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
-  nixpkgs.config.cudaSupport = true;
-  nixpkgs.config.cudaCapabilities = [ "12.0" ];
+  #nixpkgs.config.cudaSupport = true;
+  #nixpkgs.config.cudaCapabilities = [ "12.0" ];
   
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
@@ -168,14 +167,23 @@ in
     docker-compose
     tmux
     #koboldcpp
-    (pkgs.llama-cpp.override { cudaSupport = true; })
+    #(pkgs.llama-cpp.override { cudaSupport = true; })
     vlc
     libX11
+    bluetuith
   ];
 
-  environment = {
-    sessionVariables = {
-      LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+    settings = {
+      General = {
+        Experimental = true;
+        fastConnectable = true;
+      };
+      Policy = {
+        AutoEnable = true;
+      };
     };
   };
   # Enable the OpenSSH daemon.
@@ -310,13 +318,6 @@ in
   fileSystems."/home/spec/servers/cluster-node" = {
     device = "cluster-node:/home/spec";
     fsType = "nfs";
-  };
-  
-  #local ai stuff
-  services.ollama = {
-    enable = false;
-    package = pkgs.ollama-cuda;
-    host = "0.0.0.0";
   };
   
   #enable docker service

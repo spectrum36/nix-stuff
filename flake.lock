@@ -36,45 +36,10 @@
         "type": "github"
       }
     },
-    "nixpkgs_2": {
-      "locked": {
-        "lastModified": 1788179007,
-        "narHash": "sha256-hn1oU2rue2SYK8dAr8+WNZWtbsz1S2W5mnHlSEuh3bo=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "34ab99075ac4f7e40cf037eef32cb1c360bb85e9",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "home-manager": "home-manager",
-        "nixpkgs": "nixpkgs",
-        "septabee": "septabee"
-      }
-    },
-    "septabee": {
-      "inputs": {
-        "nixpkgs": "nixpkgs_2"
-      },
-      "locked": {
-        "lastModified": 1788896636,
-        "narHash": "sha256-7flIHl7DnMhq39m1cwpwScpp0GNP10EOwcrOvR8cPx4=",
-        "owner": "Ap6661",
-        "repo": "septabee-flake",
-        "rev": "837626816947f415c113aceb71f9c0bbe5a52699",
-        "type": "github"
-      },
-      "original": {
-        "owner": "Ap6661",
-        "repo": "septabee-flake",
-        "type": "github"
+        "nixpkgs": "nixpkgs"
       }
     }
   },
