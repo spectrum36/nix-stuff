@@ -11,6 +11,7 @@ in
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./nixvim.nix
     ];
   
   system.stateVersion = "25.05";
@@ -131,12 +132,13 @@ in
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
-  #nixpkgs.config.cudaSupport = true;
-  #nixpkgs.config.cudaCapabilities = [ "12.0" ];
+  nixpkgs.config.cudaSupport = true;
+  nixpkgs.config.cudaCapabilities = [ "12.0" ];
   
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
   environment.systemPackages = with pkgs; [
+    nano
     htop
     freshfetch
     grimblast
@@ -153,7 +155,6 @@ in
     hyprpaper
     kitty
     noctalia-shell
-    mako
     xdg-desktop-portal-hyprland
     xdg-desktop-portal-gtk
     slurp
@@ -167,7 +168,7 @@ in
     docker-compose
     tmux
     #koboldcpp
-    #(pkgs.llama-cpp.override { cudaSupport = true; })
+    (pkgs.llama-cpp.override { cudaSupport = true; })
     vlc
     libX11
     bluetuith
@@ -202,7 +203,7 @@ in
   ];
   hardware.nvidia = {
     modesetting.enable = true;
-    powerManagement.enable = false; #enable if you get graphical issues
+    powerManagement.enable = true; #enable if you get graphical issues
     powerManagement.finegrained = false;
     open = true;
     nvidiaSettings = true;
@@ -214,11 +215,15 @@ in
     nvidiaBusId = "PCI:1:0:0";
   };
 
-  #neovim stuff
-  programs.neovim = {
-    enable = true;
-    defaultEditor = true;
-  };
+  #neovim stuff, using nixvim
+  #programs.nixvim = {
+  #  enable = true;
+  #  colorschemes.nightfox.enable = true;
+  #  gloabalOpts = {
+  #    tabstop = 2;
+  #    expandtab = true;
+  #  };
+  #};
 
   #nerdfonts
   fonts.packages = builtins.filter lib.attrsets.isDerivation (builtins.attrValues pkgs.nerd-fonts);
