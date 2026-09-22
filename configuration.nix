@@ -11,7 +11,7 @@ in
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./nixvim.nix
+      ./nixvim/nixvim.nix
     ];
   
   system.stateVersion = "25.05";
@@ -215,15 +215,6 @@ in
     nvidiaBusId = "PCI:1:0:0";
   };
 
-  #neovim stuff, using nixvim
-  #programs.nixvim = {
-  #  enable = true;
-  #  colorschemes.nightfox.enable = true;
-  #  gloabalOpts = {
-  #    tabstop = 2;
-  #    expandtab = true;
-  #  };
-  #};
 
   #nerdfonts
   fonts.packages = builtins.filter lib.attrsets.isDerivation (builtins.attrValues pkgs.nerd-fonts);
