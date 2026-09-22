@@ -1,35 +1,44 @@
-{ pkgs, ... }:
-{
-  programs.nixvim.plugins = {
-    treesitter = {
-      enable = true;
+{ config, ... }: {
+  programs.nixvim = {
+    plugins = {
+      treesitter = {
+        enable = true;
+        autoload = true;
+        highlight.enable = true;
+        indent.enable = true;
+        folding.enable = true;
 
-      settings = {
-        indent = {
-          enable = true;
-        };
-        highlight = {
-          enable = true;
-        };
+        grammarPackages = with config.plugins.treesitter.package.builtGrammars; [
+          bash
+          json
+          lua
+          make
+          markdown
+          nix
+          regex
+          toml
+          vim
+          vimdoc
+          xml
+          yaml
+          python
+          go
+        ];
       };
 
-      nixvimInjections = true;
-      grammarPackages = pkgs.vimPlugins.nvim-treesitter.allGrammars;
-    };
-
-    treesitter-context = {
-      enable = true;
-    };
-
-    treesitter-textobjects = {
-      enable = true;
-      select = {
+      treesitter-context = {
         enable = true;
-        lookahead = true;
+        autoload = true;
+      };
+
+      treesitter-textobjects = {
+        enable = true;
+        autoload = true;
+        settings = {
+          enable = true;
+          lookahead = true;
+        };
       };
     };
   };
-  extraConfigLua = ''
-    local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
-  '';
 }
