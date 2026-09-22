@@ -8,27 +8,38 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixvim = {
-      url = "github:nix-community/nixvim";
+      url = "github:spectrum36/shark-nixvim";
     };
-    
+
     #septabee.url = "github:Ap6661/septabee-flake";
   };
 
-  outputs = { self, nixpkgs, home-manager, nixvim, ... }@inputs: {
-    nixosConfigurations.nix-nexus = nixpkgs.lib.nixosSystem {
+  outputs =
+    {
+      self,
+      nixpkgs,
+      home-manager,
+      nixvim,
+      ...
+    }@inputs:
+    let
       system = "x86_64-linux";
-      specialArgs = { inherit inputs; };
-      modules = [
-        ./configuration.nix
-        home-manager.nixosModules.home-manager
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.spec = import ./home/home.nix;
-        }
-        #{ environment.systemPackages = [ inputs.septabee.packages.x86_64-linux.default ]; }
-	nixvim.nixosModules.nixvim
-      ];
+    in
+    {
+      nixosConfigurations.nix-nexus = nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = { inherit inputs; };
+        modules = [
+          ./configuration.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.spec = import ./home/home.nix;
+          }
+          #{ environment.systemPackages = [ inputs.septabee.packages.x86_64-linux.default ]; }
+          { environment.systemPackages = [ nixvim.packages.${system}.default ]; }
+        ];
+      };
     };
-  };
 }

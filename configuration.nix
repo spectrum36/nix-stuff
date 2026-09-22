@@ -2,20 +2,27 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   sshKey = "/home/spec/.ssh/sharkey67";
 in
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      ./nixvim/nixvim.nix
-    ];
-  
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+  ];
+
   system.stateVersion = "25.05";
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.limine.enable = true;
@@ -24,10 +31,12 @@ in
   boot.supportedFilesystems = [ "nfs" ];
 
   #temp settings to build cuda
-  swapDevices = [{
-    device = "/swap";
-    size = 16 * 1024;
-  }];
+  swapDevices = [
+    {
+      device = "/swap";
+      size = 16 * 1024;
+    }
+  ];
   #nix.settings = {
   #  cores = 8;
   #  max-jobs = 4;
@@ -40,7 +49,14 @@ in
       iptables -A nixos-fw -p udp -d 224.0.0.0/4 -j nixos-fw-accept
       ipdables -A nixos-fw -p udp -s 224.0.0.0/4 -j nixos-fw-accept
     '';
-    allowedTCPPorts = [ 80 443 8080 8000 5000 5001 ];
+    allowedTCPPorts = [
+      80
+      443
+      8080
+      8000
+      5000
+      5001
+    ];
   };
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -75,10 +91,10 @@ in
 
   # Enable the KDE Plasma Desktop Environment.
   services.displayManager.ly = {
-    enable =  true;
+    enable = true;
   };
   services.desktopManager.plasma6.enable = true;
-  
+
   programs.hyprland = {
     enable = true;
     withUWSM = true;
@@ -115,14 +131,18 @@ in
   users.users."spec" = {
     isNormalUser = true;
     description = "spec";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
-  # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "docker"
+    ];
+    # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
     packages = with pkgs; [
       kdePackages.kate
-    #  thunderbird
+      #  thunderbird
     ];
   };
-  
+
   #shell config
   users.extraUsers.spec = {
     shell = pkgs.fish;
@@ -134,7 +154,7 @@ in
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.cudaSupport = true;
   nixpkgs.config.cudaCapabilities = [ "12.0" ];
-  
+
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
   environment.systemPackages = with pkgs; [
@@ -192,18 +212,17 @@ in
 
   services.logind.settings.Login.HandleLidSwitch = "ignore";
 
-
   # nvidia config
-  hardware.graphics = { 
+  hardware.graphics = {
     enable = true;
     enable32Bit = true;
   };
-  services.xserver.videoDrivers = [  
+  services.xserver.videoDrivers = [
     "nvidia"
   ];
   hardware.nvidia = {
     modesetting.enable = true;
-    powerManagement.enable = true; #enable if you get graphical issues
+    powerManagement.enable = true; # enable if you get graphical issues
     powerManagement.finegrained = false;
     open = true;
     nvidiaSettings = true;
@@ -214,7 +233,6 @@ in
     intelBusId = "PCI:0:2:0";
     nvidiaBusId = "PCI:1:0:0";
   };
-
 
   #nerdfonts
   fonts.packages = builtins.filter lib.attrsets.isDerivation (builtins.attrValues pkgs.nerd-fonts);
@@ -244,12 +262,12 @@ in
     config = {
       user = {
         name = "spectrum36";
-	email = "aidanrm36@gmail.com";
+        email = "aidanrm36@gmail.com";
       };
-    init.defaultBranch = "main";
-    };  
+      init.defaultBranch = "main";
+    };
   };
-  
+
   #xdg config for discord screenshare
   xdg.portal = {
     enable = true;
@@ -274,7 +292,6 @@ in
       Restart = "on-failure";
     };
   };
-
 
   #ssh config
 
@@ -301,7 +318,7 @@ in
         IdentityFile ${sshKey}
     '';
   };
-  
+
   #nfs stuff
   fileSystems."/home/spec/servers/zero-node" = {
     device = "zero-node:/home/spec";
@@ -315,7 +332,7 @@ in
     device = "cluster-node:/home/spec";
     fsType = "nfs";
   };
-  
+
   #enable docker service
   virtualisation.docker.enable = true;
 

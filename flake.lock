@@ -4,6 +4,7 @@
       "inputs": {
         "nixpkgs-lib": [
           "nixvim",
+          "nixvim",
           "nixpkgs"
         ]
       },
@@ -59,6 +60,22 @@
     },
     "nixpkgs_2": {
       "locked": {
+        "lastModified": 1790046670,
+        "narHash": "sha256-MYiI+CzL0tuWgRPjGsKCDHqYs2T3OzMlMQWOYWG0qso=",
+        "owner": "NixOs",
+        "repo": "nixpkgs",
+        "rev": "6774f7bc253789b113a4f39285dc0fa100abeacc",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOs",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_3": {
+      "locked": {
         "lastModified": 1789724158,
         "narHash": "sha256-nlKgrm0dsVhOSopKheVBCcOpiIticufPPVLdVOI0euA=",
         "owner": "NixOS",
@@ -75,8 +92,27 @@
     },
     "nixvim": {
       "inputs": {
-        "flake-parts": "flake-parts",
         "nixpkgs": "nixpkgs_2",
+        "nixvim": "nixvim_2"
+      },
+      "locked": {
+        "lastModified": 1790111800,
+        "narHash": "sha256-4PrvD+cPFSfKcQUkSS5N3POOiuv6nHtjF4e8TqzkGgk=",
+        "owner": "spectrum36",
+        "repo": "shark-nixvim",
+        "rev": "c8a5421bcdede87949c6d4368945a56658b77976",
+        "type": "github"
+      },
+      "original": {
+        "owner": "spectrum36",
+        "repo": "shark-nixvim",
+        "type": "github"
+      }
+    },
+    "nixvim_2": {
+      "inputs": {
+        "flake-parts": "flake-parts",
+        "nixpkgs": "nixpkgs_3",
         "systems": "systems"
       },
       "locked": {
