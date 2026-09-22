@@ -11,7 +11,7 @@
       url = "github:spectrum36/shark-nixvim";
     };
 
-    #septabee.url = "github:Ap6661/septabee-flake";
+    septabee.url = "github:Ap6661/septabee-flake";
   };
 
   outputs =
@@ -37,8 +37,12 @@
             home-manager.useUserPackages = true;
             home-manager.users.spec = import ./home/home.nix;
           }
-          #{ environment.systemPackages = [ inputs.septabee.packages.x86_64-linux.default ]; }
-          { environment.systemPackages = [ nixvim.packages.${system}.default ]; }
+          {
+            environment.systemPackages = [
+              inputs.septabee.packages.${system}.default
+              nixvim.packages.${system}.default
+            ];
+          }
         ];
       };
     };
