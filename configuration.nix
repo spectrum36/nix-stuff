@@ -158,7 +158,6 @@ in
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
   environment.systemPackages = with pkgs; [
-    nano
     htop
     freshfetch
     grimblast
@@ -248,8 +247,8 @@ in
   programs.fish = {
     enable = true;
     interactiveShellInit = ''
-      alias update="sudo nixos-rebuild switch"
-      alias upgrade="sudo nixos-rebuild switch --upgrade"
+      alias update="sudo nix flake update nixvim --flake /etc/nixos && sudo nixos-rebuild switch --flake /etc/nixos"
+      alias upgrade="sudo nix flake update --flake /etc/nixos && sudo nixos-rebuild switch --flake /etc/nixos --upgrade"
       alias nix-test="sudo nixos-rebuild test"
       alias config="sudo nvim /etc/nixos/configuration.nix";
       alias nomad="/home/spec/Projects/python/nomadnet/.venv/bin/nomadnet"
