@@ -7,9 +7,7 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixvim = {
-      url = "github:spectrum36/shark-nixvim";
-    };
+    nixvim.url = "github:spectrum36/shark-nixvim";
 
     septabee.url = "github:Ap6661/septabee-flake";
   };

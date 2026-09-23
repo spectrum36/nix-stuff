@@ -62,13 +62,13 @@
       "locked": {
         "lastModified": 1790046670,
         "narHash": "sha256-MYiI+CzL0tuWgRPjGsKCDHqYs2T3OzMlMQWOYWG0qso=",
-        "owner": "NixOs",
+        "owner": "NixOS",
         "repo": "nixpkgs",
         "rev": "6774f7bc253789b113a4f39285dc0fa100abeacc",
         "type": "github"
       },
       "original": {
-        "owner": "NixOs",
+        "owner": "NixOS",
         "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
@@ -112,11 +112,11 @@
         "nixvim": "nixvim_2"
       },
       "locked": {
-        "lastModified": 1790111800,
-        "narHash": "sha256-4PrvD+cPFSfKcQUkSS5N3POOiuv6nHtjF4e8TqzkGgk=",
+        "lastModified": 1790118218,
+        "narHash": "sha256-Ex5okS8fv0z/cOWNAgdtPUnnAvrQPFnROakOVq+1f84=",
         "owner": "spectrum36",
         "repo": "shark-nixvim",
-        "rev": "c8a5421bcdede87949c6d4368945a56658b77976",
+        "rev": "e6434b92168e16705777ee9467b0b0420ed5cbe8",
         "type": "github"
       },
       "original": {

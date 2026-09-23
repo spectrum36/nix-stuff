@@ -25,10 +25,14 @@ in
   ];
 
   # Use the systemd-boot EFI boot loader.
-  boot.loader.limine.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelPackages = pkgs.linuxPackages_7_1;
-  boot.supportedFilesystems = [ "nfs" ];
+  boot = {
+    loader = {
+      limine.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
+    kernelPackages = pkgs.linuxPackages_7_1;
+    supportedFilesystems = [ "nfs" ];
+  };
 
   #temp settings to build cuda
   swapDevices = [
@@ -42,21 +46,23 @@ in
   #  max-jobs = 4;
   #};
 
-  networking.hostName = "nix-nexus"; # Define your hostname.
-  networking.firewall = {
-    enable = true;
-    extraCommands = ''
-      iptables -A nixos-fw -p udp -d 224.0.0.0/4 -j nixos-fw-accept
-      ipdables -A nixos-fw -p udp -s 224.0.0.0/4 -j nixos-fw-accept
-    '';
-    allowedTCPPorts = [
-      80
-      443
-      8080
-      8000
-      5000
-      5001
-    ];
+  networking = {
+    hostName = "nix-nexus"; # Define your hostname.
+    firewall = {
+      enable = true;
+      extraCommands = ''
+        iptables -A nixos-fw -p udp -d 224.0.0.0/4 -j nixos-fw-accept
+        ipdables -A nixos-fw -p udp -s 224.0.0.0/4 -j nixos-fw-accept
+      '';
+      allowedTCPPorts = [
+        80
+        443
+        8080
+        8000
+        5000
+        5001
+      ];
+    };
   };
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -87,19 +93,14 @@ in
 
   # Enable the X11 windowing system.
   # You can disable this if you're only using the Wayland session.
-  services.xserver.enable = true;
-
-  # Enable the KDE Plasma Desktop Environment.
-  services.displayManager.ly = {
-    enable = true;
+  services = {
+    xserver.enable = true;
+    displayManager.ly = {
+      enable = true;
+    };
+    desktopManager.plasma6.enable = true;
   };
-  services.desktopManager.plasma6.enable = true;
 
-  programs.hyprland = {
-    enable = true;
-    withUWSM = true;
-    xwayland.enable = true;
-  };
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "us";
@@ -147,13 +148,15 @@ in
   users.extraUsers.spec = {
     shell = pkgs.fish;
   };
-  # Install firefox.
-  programs.firefox.enable = true;
 
   # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-  nixpkgs.config.cudaSupport = true;
-  nixpkgs.config.cudaCapabilities = [ "12.0" ];
+  nixpkgs = {
+    config = {
+      allowUnfree = true;
+      cudaSupport = true;
+      cudaCapabilities = [ "12.0" ];
+    };
+  };
 
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
@@ -193,6 +196,15 @@ in
     bluetuith
   ];
 
+  programs = {
+    hyprland = {
+      enable = true;
+      withUWSM = true;
+      xwayland.enable = true;
+    };
+    firefox.enable = true;
+  };
+
   hardware.bluetooth = {
     enable = true;
     powerOnBoot = true;
@@ -212,25 +224,28 @@ in
   services.logind.settings.Login.HandleLidSwitch = "ignore";
 
   # nvidia config
-  hardware.graphics = {
-    enable = true;
-    enable32Bit = true;
-  };
   services.xserver.videoDrivers = [
     "nvidia"
   ];
-  hardware.nvidia = {
-    modesetting.enable = true;
-    powerManagement.enable = true; # enable if you get graphical issues
-    powerManagement.finegrained = false;
-    open = true;
-    nvidiaSettings = true;
-    package = config.boot.kernelPackages.nvidiaPackages.latest;
-  };
-  hardware.nvidia.prime = {
-    sync.enable = true;
-    intelBusId = "PCI:0:2:0";
-    nvidiaBusId = "PCI:1:0:0";
+  hardware = {
+    graphics = {
+      enable = true;
+      enable32Bit = true;
+    };
+    nvidia = {
+      modesetting.enable = true;
+      powerManagement.enable = true; # enable if you get graphical issues
+      powerManagement.finegrained = false;
+      open = true;
+      nvidiaSettings = true;
+      package = config.boot.kernelPackages.nvidiaPackages.latest;
+
+      prime = {
+        sync.enable = true;
+        intelBusId = "PCI:0:2:0";
+        nvidiaBusId = "PCI:1:0:0";
+      };
+    };
   };
 
   #nerdfonts
@@ -311,8 +326,8 @@ in
         User spec
         IdentityFile ${sshKey}
 
-      Host cluster-node
-        Hostname cluster-node
+      Host torment-node
+        Hostname torment-node
         User spec
         IdentityFile ${sshKey}
     '';
@@ -327,10 +342,6 @@ in
     device = "nix-node:/home/spec";
     fsType = "nfs";
   };
-  fileSystems."/home/spec/servers/cluster-node" = {
-    device = "cluster-node:/home/spec";
-    fsType = "nfs";
-  };
 
   #enable docker service
   virtualisation.docker.enable = true;
@@ -338,11 +349,7 @@ in
   #obs
   programs.obs-studio = {
     enable = true;
-    package = (
-      pkgs.obs-studio.override {
-        cudaSupport = true;
-      }
-    );
+    package = pkgs.obs-studio.override { cudaSupport = true; };
 
     plugins = with pkgs.obs-studio-plugins; [
       wlrobs
