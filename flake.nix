@@ -8,7 +8,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixvim.url = "github:spectrum36/shark-nixvim";
-
     septabee.url = "github:Ap6661/septabee-flake";
   };
 
@@ -39,6 +38,7 @@
             environment.systemPackages = [
               inputs.septabee.packages.${system}.default
               nixvim.packages.${system}.default
+              nixvim.packages.${system}.pvim
             ];
           }
         ];
