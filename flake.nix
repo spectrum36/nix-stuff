@@ -46,7 +46,7 @@
               inputs.septabee.packages.${system}.default
               nixvim.packages.${system}.default
               nixvim.packages.${system}.pvim
-              inputs.opencode.packages.${pkgs.system}.default
+              inputs.opencode.packages.${system}.default
             ];
           }
         ];
