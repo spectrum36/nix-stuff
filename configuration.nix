@@ -194,6 +194,12 @@ in
     vlc
     libX11
     bluetuith
+    filezilla
+    gimp
+    libreoffice-qt
+    hunspell
+    hunspellDicts.en_US
+    hyphenDicts.en_US
   ];
 
   programs = {
@@ -203,6 +209,13 @@ in
       xwayland.enable = true;
     };
     firefox.enable = true;
+    sharktasks = {
+      enable = true;
+      settings = {
+        port = 8089;
+        host = "http://torment-node";
+      };
+    };
   };
 
   hardware.bluetooth = {
@@ -234,7 +247,7 @@ in
     };
     nvidia = {
       modesetting.enable = true;
-      powerManagement.enable = true; # enable if you get graphical issues
+      powerManagement.enable = false; # enable if you get graphical issues
       powerManagement.finegrained = false;
       open = true;
       nvidiaSettings = true;

@@ -106,17 +106,33 @@
         "type": "github"
       }
     },
+    "nixpkgs_5": {
+      "locked": {
+        "lastModified": 1791260994,
+        "narHash": "sha256-Miqqk/ammqnTUxaoCyvtwoPeLbI1ksFyLxi/CazZpWY=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "151fa4e8ddfdd8dd25d945ad94ed54a13de9f6e4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixvim": {
       "inputs": {
         "nixpkgs": "nixpkgs_2",
         "nixvim": "nixvim_2"
       },
       "locked": {
-        "lastModified": 1790256919,
-        "narHash": "sha256-EIzcVRH3yuM900WQCgsNcZNqAiQBfMeILJHAmReIFN4=",
+        "lastModified": 1790342231,
+        "narHash": "sha256-cwNjENhFyu84xxWDvORtsLX3sRluohe2uH68jPZxvD4=",
         "owner": "spectrum36",
         "repo": "shark-nixvim",
-        "rev": "e9d8f144595aa3ab95197992e4ffa4e987ae512a",
+        "rev": "dd56c96c3d9864fac3f272856692d21bc7d35ffa",
         "type": "github"
       },
       "original": {
@@ -150,7 +166,8 @@
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
         "nixvim": "nixvim",
-        "septabee": "septabee"
+        "septabee": "septabee",
+        "sharktasks": "sharktasks"
       }
     },
     "septabee": {
@@ -168,6 +185,24 @@
       "original": {
         "owner": "Ap6661",
         "repo": "septabee-flake",
+        "type": "github"
+      }
+    },
+    "sharktasks": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_5"
+      },
+      "locked": {
+        "lastModified": 1791353688,
+        "narHash": "sha256-dB7DN0CYfapj3Ci+hhPrM5tLpmY/EvucIXTcndu3qmI=",
+        "owner": "spectrum36",
+        "repo": "shark-task",
+        "rev": "a08cc53ab8c49910567f7657d85ad27929e6cc07",
+        "type": "github"
+      },
+      "original": {
+        "owner": "spectrum36",
+        "repo": "shark-task",
         "type": "github"
       }
     },
