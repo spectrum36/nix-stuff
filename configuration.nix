@@ -16,6 +16,7 @@ in
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
+    ./sudoless.nix
   ];
 
   system.stateVersion = "25.05";
@@ -30,7 +31,7 @@ in
       limine.enable = true;
       efi.canTouchEfiVariables = true;
     };
-    kernelPackages = pkgs.linuxPackages_7_1;
+    kernelPackages = pkgs.linuxPackages_7_2;
     supportedFilesystems = [ "nfs" ];
   };
 
@@ -41,10 +42,10 @@ in
       size = 16 * 1024;
     }
   ];
-  #nix.settings = {
-  #  cores = 8;
-  #  max-jobs = 4;
-  #};
+  nix.settings = {
+    cores = 8;
+    max-jobs = 4;
+  };
 
   networking = {
     hostName = "nix-nexus"; # Define your hostname.
@@ -347,13 +348,19 @@ in
   };
 
   #nfs stuff
-  fileSystems."/home/spec/servers/zero-node" = {
-    device = "zero-node:/home/spec";
-    fsType = "nfs";
-  };
-  fileSystems."/home/spec/servers/nix-node" = {
-    device = "nix-node:/home/spec";
-    fsType = "nfs";
+  fileSystems = {
+    "/home/spec/servers/zero-node" = {
+      device = "zero-node:/home/spec";
+      fsType = "nfs";
+    };
+    "/home/spec/servers/nix-node" = {
+      device = "nix-node:/home/spec";
+      fsType = "nfs";
+    };
+    "/home/spec/servers/torment-node" = {
+      device = "torment-node:/home/spec";
+      fsType = "nfs";
+    };
   };
 
   #enable docker service
@@ -371,5 +378,33 @@ in
       obs-gstreamer
       obs-backgroundremoval
     ];
+  };
+  #llama.cpp service
+  services.llama-cpp = {
+    enable = true;
+    package = pkgs.llama-cpp.override { cudaSupport = true; };
+    settings = { 
+      models-preset = (pkgs.formats.ini { }).generate "models-preset.ini"{
+        "qwen3.8-27b" = {
+          hf-repo = "unsloth/Qwen3.8-27B-GGUF";
+          hf-file = "Qwen3.8-27B-UD-Q4_K_M.gguf";
+          alias = "qwen3.8-27b";
+          temp = "0.2";
+          repeat-penalty = "1.05";
+          top-k = "80";
+          ctx-size = "48000";
+          spec-type = "draft-mtp";
+          flash-attn = "on";
+          cache-type-k = "q8_0";
+          cache-type-v = "q8_0";
+        };
+        "qwen3-coder-30b" = {
+          hf-repo = "Qwen/Qwen3-30B-A3B-GGUF";
+          hf-file = "Qwen3-Coder-30B-A3B-Q4_K_M.gguf";
+          alias = "qwen3-coder";
+          ctx-size = "100000";
+        };
+      };
+    };
   };
 }
