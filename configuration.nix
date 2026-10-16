@@ -17,6 +17,7 @@ in
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./sudoless.nix
+    ./gpu.nix
   ];
 
   system.stateVersion = "25.05";
@@ -262,6 +263,10 @@ in
     };
   };
 
+
+  powerManagement.cpuFreqGovernor = "performance";
+  services.thermald.enable = true;
+
   #nerdfonts
   fonts.packages = builtins.filter lib.attrsets.isDerivation (builtins.attrValues pkgs.nerd-fonts);
 
@@ -396,7 +401,7 @@ in
           spec-type = "draft-mtp";
           flash-attn = "on";
           cache-type-k = "q8_0";
-          cache-type-v = "q8_0";
+          cache-type-v = "q8_0"; 
         };
         "qwen3-coder-30b" = {
           hf-repo = "Qwen/Qwen3-30B-A3B-GGUF";
