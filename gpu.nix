@@ -1,4 +1,4 @@
-{
+{ config, ... }: {
   systemd.services.nvidia-power-limit = {
     description = "Set NVIDIA GPU power limit";
     wantedBy = [ "multi-user.target" ];
