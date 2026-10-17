@@ -18,6 +18,9 @@ in
     ./hardware-configuration.nix
     ./sudoless.nix
     ./gpu.nix
+    ./llama.nix
+    ./mouse.nix
+    #./hermes.nix
   ];
 
   system.stateVersion = "25.05";
@@ -32,6 +35,7 @@ in
       limine.enable = true;
       efi.canTouchEfiVariables = true;
     };
+    kernel.sysctl."vm-swappiness" = 10;
     kernelPackages = pkgs.linuxPackages_7_2;
     supportedFilesystems = [ "nfs" ];
   };
@@ -54,7 +58,7 @@ in
       enable = true;
       extraCommands = ''
         iptables -A nixos-fw -p udp -d 224.0.0.0/4 -j nixos-fw-accept
-        ipdables -A nixos-fw -p udp -s 224.0.0.0/4 -j nixos-fw-accept
+        iptables -A nixos-fw -p udp -s 224.0.0.0/4 -j nixos-fw-accept
       '';
       allowedTCPPorts = [
         80
@@ -204,6 +208,7 @@ in
     hyphenDicts.en_US
   ];
 
+
   programs = {
     hyprland = {
       enable = true;
@@ -249,7 +254,7 @@ in
     };
     nvidia = {
       modesetting.enable = true;
-      powerManagement.enable = false; # enable if you get graphical issues
+      powerManagement.enable = true; # enable if you get graphical issues
       powerManagement.finegrained = false;
       open = true;
       nvidiaSettings = true;
