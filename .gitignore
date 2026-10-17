@@ -1,2 +1,10 @@
 .secrets/
 *.sops.json
+*.age
+.sops.yaml
+.git/.git
+.nix-defexpr/
+.nix-profile/
+.nix-build/
+*.enc
+*.secret

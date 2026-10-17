@@ -20,7 +20,8 @@ in
     ./gpu.nix
     ./llama.nix
     ./mouse.nix
-    #./hermes.nix
+    ./hermes.nix
+    ./sops.nix
   ];
 
   system.stateVersion = "25.05";

@@ -7,7 +7,7 @@
       devices = [
         {
           name = "MX Master 3S";
-          dpi = 4000;
+          dpi = 3500;
         }
       ];
     };
