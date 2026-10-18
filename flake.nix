@@ -11,8 +11,7 @@
     septabee.url = "github:Ap6661/septabee-flake";
     sharktasks.url = "github:spectrum36/shark-task";
     opencode.url = "github:anomalyco/opencode/v2.0.9";
-    hermes.url = "github:NousResearch/hermes-agent";
-    sops-nix.url = "github:Mic92/sops-nix";
+    hermes-agent.url = "github:NousResearch/hermes-agent";
   };
 
   outputs = {
@@ -22,8 +21,7 @@
     nixvim,
     sharktasks,
     opencode,
-    hermes,
-    sops-nix,
+    hermes-agent,
     ...
     }@inputs:
     let
@@ -34,11 +32,10 @@
       specialArgs = { inherit inputs; };
       modules = [
         ./configuration.nix
-        sops-nix.nixosModules.sops
+        ./hermes/module.nix
         sharktasks.nixosModules.default
-        hermes.nixosModules.default
         home-manager.nixosModules.home-manager {
-          home-manager = { 
+          home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
             users.spec = import ./home/home.nix;
@@ -49,6 +46,7 @@
             nixvim.packages.${system}.default
             nixvim.packages.${system}.pvim
             inputs.opencode.packages.${system}.default
+            inputs.hermes-agent.packages.${system}.default
           ];
         }
       ];

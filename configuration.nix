@@ -1,6 +1,6 @@
 # Edit this configuration file to define what should be installed on
 # your system. Help is available in the configuration.nix(5) man page, on
-# https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
+# https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
 
 {
   config,
@@ -20,8 +20,6 @@ in
     ./gpu.nix
     ./llama.nix
     ./mouse.nix
-    ./hermes.nix
-    ./sops.nix
   ];
 
   system.stateVersion = "25.05";
@@ -71,11 +69,6 @@ in
       ];
     };
   };
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -99,7 +92,6 @@ in
   };
 
   # Enable the X11 windowing system.
-  # You can disable this if you're only using the Wayland session.
   services = {
     xserver.enable = true;
     displayManager.ly = {
@@ -125,17 +117,9 @@ in
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-
-    # Use the WirePlumber session manager
-    #wireplumber.enable = true;
   };
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.libinput.enable = true;
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
+  # Define a user account.
   users.users."spec" = {
     isNormalUser = true;
     description = "spec";
@@ -144,19 +128,15 @@ in
       "wheel"
       "docker"
     ];
-    # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
     packages = with pkgs; [
       kdePackages.kate
-      #  thunderbird
     ];
   };
 
-  #shell config
   users.extraUsers.spec = {
     shell = pkgs.fish;
   };
 
-  # Allow unfree packages
   nixpkgs = {
     config = {
       allowUnfree = true;
@@ -165,8 +145,6 @@ in
     };
   };
 
-  # List packages installed in system profile.
-  # You can use https://search.nixos.org/ to find more packages (and options).
   environment.systemPackages = with pkgs; [
     htop
     freshfetch
@@ -177,7 +155,6 @@ in
     zsh
     wget
     gh
-    freshfetch
     fuzzel
     pcmanfm
     grim
@@ -196,7 +173,6 @@ in
     docker
     docker-compose
     tmux
-    #koboldcpp
     (pkgs.llama-cpp.override { cudaSupport = true; })
     vlc
     libX11
@@ -208,7 +184,6 @@ in
     hunspellDicts.en_US
     hyphenDicts.en_US
   ];
-
 
   programs = {
     hyprland = {
@@ -239,15 +214,12 @@ in
       };
     };
   };
-  # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
 
+  services.openssh.enable = true;
   services.logind.settings.Login.HandleLidSwitch = "ignore";
 
   # nvidia config
-  services.xserver.videoDrivers = [
-    "nvidia"
-  ];
+  services.xserver.videoDrivers = [ "nvidia" ];
   hardware = {
     graphics = {
       enable = true;
@@ -255,12 +227,11 @@ in
     };
     nvidia = {
       modesetting.enable = true;
-      powerManagement.enable = true; # enable if you get graphical issues
+      powerManagement.enable = true;
       powerManagement.finegrained = false;
       open = true;
       nvidiaSettings = true;
       package = config.boot.kernelPackages.nvidiaPackages.latest;
-
       prime = {
         sync.enable = true;
         intelBusId = "PCI:0:2:0";
@@ -269,13 +240,10 @@ in
     };
   };
 
-
   powerManagement.cpuFreqGovernor = "performance";
   services.thermald.enable = true;
 
-  #nerdfonts
   fonts.packages = builtins.filter lib.attrsets.isDerivation (builtins.attrValues pkgs.nerd-fonts);
-
   services.tailscale.enable = true;
 
   programs.steam = {
@@ -283,7 +251,6 @@ in
     dedicatedServer.openFirewall = true;
   };
 
-  #fish config
   programs.fish = {
     enable = true;
     interactiveShellInit = ''
@@ -295,7 +262,6 @@ in
     '';
   };
 
-  #git stuff
   programs.git = {
     enable = true;
     config = {
@@ -307,7 +273,6 @@ in
     };
   };
 
-  #xdg config for discord screenshare
   xdg.portal = {
     enable = true;
     extraPortals = [
@@ -320,7 +285,6 @@ in
 
   programs.noisetorch.enable = true;
 
-  #easyeffects stuff
   programs.dconf.enable = true;
   systemd.user.services.easyeffects = {
     enable = false;
@@ -331,8 +295,6 @@ in
       Restart = "on-failure";
     };
   };
-
-  #ssh config
 
   programs.ssh = {
     extraConfig = ''
@@ -358,7 +320,6 @@ in
     '';
   };
 
-  #nfs stuff
   fileSystems = {
     "/home/spec/servers/zero-node" = {
       device = "zero-node:/home/spec";
@@ -374,14 +335,11 @@ in
     };
   };
 
-  #enable docker service
   virtualisation.docker.enable = true;
 
-  #obs
   programs.obs-studio = {
     enable = true;
     package = pkgs.obs-studio.override { cudaSupport = true; };
-
     plugins = with pkgs.obs-studio-plugins; [
       wlrobs
       obs-pipewire-audio-capture
