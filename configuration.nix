@@ -22,6 +22,16 @@ in
     ./mouse.nix
   ];
 
+  # SOPS for encrypted secrets (Discord bot credentials)
+  sops = {
+    age.keyFile = "/home/spec/.config/sops/age/keys.txt";
+    secrets."hermes-discord" = {
+      sopsFile = ./secrets/discord.env.sops;
+      # sops-nix decrypts this to /run/secrets/hermes-discord
+      # The decrypted file is in .env format (KEY=VALUE pairs)
+    };
+  };
+
   system.stateVersion = "25.05";
   nix.settings.experimental-features = [
     "nix-command"
@@ -69,6 +79,11 @@ in
       ];
     };
   };
+  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+
+  # Configure network proxy if necessary
+  # networking.proxy.default = "http://user:password@proxy:port/";
+  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -92,6 +107,7 @@ in
   };
 
   # Enable the X11 windowing system.
+  # You can disable this if you're only using the Wayland session.
   services = {
     xserver.enable = true;
     displayManager.ly = {
@@ -117,9 +133,17 @@ in
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+    # If you want to use JACK applications, uncomment this
+    #jack.enable = true;
+
+    # Use the WirePlumber session manager
+    #wireplumber.enable = true;
   };
 
-  # Define a user account.
+  # Enable touchpad support (enabled default in most desktopManager).
+  # services.libinput.enable = true;
+
+  # Define a user account. Don't forget to set a password with 'passwd'.
   users.users."spec" = {
     isNormalUser = true;
     description = "spec";
@@ -128,15 +152,20 @@ in
       "wheel"
       "docker"
     ];
+    # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
     packages = with pkgs; [
       kdePackages.kate
+      #  thunderbird
     ];
+    linger = true;
   };
 
+  #shell config
   users.extraUsers.spec = {
     shell = pkgs.fish;
   };
 
+  # Allow unfree packages
   nixpkgs = {
     config = {
       allowUnfree = true;
@@ -145,6 +174,8 @@ in
     };
   };
 
+  # List packages installed in system profile.
+  # You can use https://search.nixos.org/ to find more packages (and options).
   environment.systemPackages = with pkgs; [
     htop
     freshfetch
@@ -155,6 +186,7 @@ in
     zsh
     wget
     gh
+    freshfetch
     fuzzel
     pcmanfm
     grim
@@ -173,6 +205,7 @@ in
     docker
     docker-compose
     tmux
+    #koboldcpp
     (pkgs.llama-cpp.override { cudaSupport = true; })
     vlc
     libX11
@@ -185,13 +218,17 @@ in
     hyphenDicts.en_US
   ];
 
+
   programs = {
     hyprland = {
       enable = true;
       withUWSM = true;
       xwayland.enable = true;
     };
-    firefox.enable = true;
+    firefox = {
+      enable = true;
+      package = pkgs.firefox.override { version = "158.0"; };
+    };
     sharktasks = {
       enable = true;
       settings = {
@@ -214,12 +251,15 @@ in
       };
     };
   };
-
+  # Enable the OpenSSH daemon.
   services.openssh.enable = true;
+
   services.logind.settings.Login.HandleLidSwitch = "ignore";
 
   # nvidia config
-  services.xserver.videoDrivers = [ "nvidia" ];
+  services.xserver.videoDrivers = [
+    "nvidia"
+  ];
   hardware = {
     graphics = {
       enable = true;
@@ -227,11 +267,12 @@ in
     };
     nvidia = {
       modesetting.enable = true;
-      powerManagement.enable = true;
+      powerManagement.enable = true; # enable if you get graphical issues
       powerManagement.finegrained = false;
       open = true;
       nvidiaSettings = true;
       package = config.boot.kernelPackages.nvidiaPackages.latest;
+
       prime = {
         sync.enable = true;
         intelBusId = "PCI:0:2:0";
@@ -240,10 +281,13 @@ in
     };
   };
 
+
   powerManagement.cpuFreqGovernor = "performance";
   services.thermald.enable = true;
 
+  #nerdfonts
   fonts.packages = builtins.filter lib.attrsets.isDerivation (builtins.attrValues pkgs.nerd-fonts);
+
   services.tailscale.enable = true;
 
   programs.steam = {
@@ -251,6 +295,7 @@ in
     dedicatedServer.openFirewall = true;
   };
 
+  #fish config
   programs.fish = {
     enable = true;
     interactiveShellInit = ''
@@ -262,6 +307,7 @@ in
     '';
   };
 
+  #git stuff
   programs.git = {
     enable = true;
     config = {
@@ -273,6 +319,7 @@ in
     };
   };
 
+  #xdg config for discord screenshare
   xdg.portal = {
     enable = true;
     extraPortals = [
@@ -285,6 +332,7 @@ in
 
   programs.noisetorch.enable = true;
 
+  #easyeffects stuff
   programs.dconf.enable = true;
   systemd.user.services.easyeffects = {
     enable = false;
@@ -295,6 +343,8 @@ in
       Restart = "on-failure";
     };
   };
+
+  #ssh config
 
   programs.ssh = {
     extraConfig = ''
@@ -320,6 +370,7 @@ in
     '';
   };
 
+  #nfs stuff
   fileSystems = {
     "/home/spec/servers/zero-node" = {
       device = "zero-node:/home/spec";
@@ -335,11 +386,14 @@ in
     };
   };
 
+  #enable docker service
   virtualisation.docker.enable = true;
 
+  #obs
   programs.obs-studio = {
     enable = true;
     package = pkgs.obs-studio.override { cudaSupport = true; };
+
     plugins = with pkgs.obs-studio-plugins; [
       wlrobs
       obs-pipewire-audio-capture

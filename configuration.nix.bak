@@ -147,6 +147,7 @@ in
       kdePackages.kate
       #  thunderbird
     ];
+    linger = true;
   };
 
   #shell config
@@ -214,7 +215,10 @@ in
       withUWSM = true;
       xwayland.enable = true;
     };
-    firefox.enable = true;
+    firefox = {
+      enable = true;
+      package = pkgs.firefox.override { version = "158.0"; };
+    };
     sharktasks = {
       enable = true;
       settings = {
@@ -387,14 +391,5 @@ in
       obs-gstreamer
       obs-backgroundremoval
     ];
-  };
-
-  # Hermes Agent
-  services.hermes-agent = {
-    enable = true;
-    settings.model.default = "qwen3.6-35b-a3b";
-    settings.model.base_url = "http://127.0.0.1:37453/v1";
-    addToSystemPackages = true;
-    extraPackages = [ pkgs.llama-cpp ];
   };
 }

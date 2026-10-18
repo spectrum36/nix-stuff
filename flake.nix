@@ -7,6 +7,10 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixvim.url = "github:spectrum36/shark-nixvim";
     septabee.url = "github:Ap6661/septabee-flake";
     sharktasks.url = "github:spectrum36/shark-task";
@@ -21,6 +25,7 @@
     nixvim,
     sharktasks,
     opencode,
+    sops-nix,
     hermes-agent,
     ...
     }@inputs:
@@ -32,12 +37,17 @@
       specialArgs = { inherit inputs; };
       modules = [
         ./configuration.nix
-        ./hermes/module.nix
+        inputs.sops-nix.nixosModules.sops
+        inputs.hermes-agent.nixosModules.default
         sharktasks.nixosModules.default
         home-manager.nixosModules.home-manager {
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
+            extraSpecialArgs = {
+              inherit inputs;
+              hermes-agent = inputs.hermes-agent;
+            };
             users.spec = import ./home/home.nix;
           };
         }
@@ -46,7 +56,6 @@
             nixvim.packages.${system}.default
             nixvim.packages.${system}.pvim
             inputs.opencode.packages.${system}.default
-            inputs.hermes-agent.packages.${system}.default
           ];
         }
       ];

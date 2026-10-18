@@ -1,0 +1,20 @@
+{ config, pkgs, lib, hermes-agent, inputs, ... }: {
+  imports = [
+    hermes-agent.homeManagerModules.default
+  ];
+
+  programs.hermes-agent.enable = true;
+
+  services.hermes-agent = {
+    enable = true;
+    gateway.enable = true;
+
+    # Secret env vars from sops-nix (decrypted .env file with KEY=VALUE pairs)
+    environmentFiles = [ config.sops.secrets."hermes-discord".path ];
+
+    settings = {
+      model.default = "qwen3.6-35b-a3b";
+      model.base_url = "http://localhost:8080/v1";
+    };
+  };
+}

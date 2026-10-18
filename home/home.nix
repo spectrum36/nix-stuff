@@ -1,9 +1,6 @@
-{ pkgs, ... }: {
+{ config, pkgs, ... }: {
   home.stateVersion = "26.05";
   programs.home-manager.enable = true;
-  #home.file.".config/nvim" = {
-  #  source = ./nvim;
-  #};
   home.file.".config/fuzzel" = {
     source = ./fuzzel;
   };
@@ -13,5 +10,7 @@
   home.file.".config/kitty" = {
     source = ./kitty;
   };
+  imports = [
+    ./hermes.nix
+  ];
 }
-
