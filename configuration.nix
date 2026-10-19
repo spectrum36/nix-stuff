@@ -25,11 +25,17 @@ in
   # SOPS for encrypted secrets (Discord bot credentials)
   sops = {
     age.keyFile = "/home/spec/.config/sops/age/keys.txt";
-    secrets."hermes-discord" = {
+    secrets."hermes-agent" = {
       sopsFile = ./secrets/discord.env.sops;
+      owner = "spec";
+      group = "users";
       # sops-nix decrypts this to /run/secrets/hermes-discord
       # The decrypted file is in .env format (KEY=VALUE pairs)
     };
+  };
+
+  home-manager.extraSpecialArgs = {
+    hermesSopsPath = config.sops.secrets."hermes-agent".path;
   };
 
   system.stateVersion = "25.05";

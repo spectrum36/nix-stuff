@@ -1,4 +1,4 @@
-{ config, pkgs, lib, hermes-agent, ... }: {
+{ config, pkgs, lib, hermes-agent, hermesSopsPath, ... }: {
   imports = [
     hermes-agent.homeManagerModules.default
   ];
@@ -8,12 +8,10 @@
   services.hermes-agent = {
     enable = true;
     gateway.enable = true;
+    environmentFiles = [ hermesSopsPath ];
+    backend.mode = "dashboard";
+    backend.port = 9119;
     settings = {
-      platforms = {
-        enable = true;
-        token = "MTQ2OTIyMDc0MDQ2NDM4MTk3NA.Gt3-_Y.BhAekM31HhVCtejdJ5sPqEQTrhZ2vnYHWkUVuE";
-        allowedUsers = [ "262054257472045056" ];
-      };
       model.default = "qwen3.6-35b-a3b";
       model.base_url = "http://localhost:8080/v1";
     };
