@@ -1,16 +1,21 @@
 { config, pkgs, ... }: {
-  home.stateVersion = "26.05";
-  programs.home-manager.enable = true;
-  home.file.".config/fuzzel" = {
-    source = ./fuzzel;
-  };
-  home.file.".config/hypr" = {
-    source = ./hypr;
-  };
-  home.file.".config/kitty" = {
-    source = ./kitty;
-  };
   imports = [
     ./hermes.nix
+    ./ssh.nix
   ];
+  programs.home-manager.enable = true;
+  home = {
+    stateVersion = "26.05";
+    file = { 
+      ".config/fuzzel" = {
+        source = ./fuzzel;
+      };
+      ".config/hypr" = {
+        source = ./hypr;
+      };
+      ".config/kitty" = {
+        source = ./kitty;
+      };
+    };
+  };
 }

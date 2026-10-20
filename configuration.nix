@@ -7,12 +7,7 @@
   lib,
   pkgs,
   ...
-}:
-
-let
-  sshKey = "/home/spec/.ssh/sharkey67";
-in
-{
+}: {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
@@ -224,7 +219,6 @@ in
     hyphenDicts.en_US
   ];
 
-
   programs = {
     hyprland = {
       enable = true;
@@ -348,32 +342,6 @@ in
       ExecStart = "${pkgs.easyeffects}/bin/easyeffects -w";
       Restart = "on-failure";
     };
-  };
-
-  #ssh config
-
-  programs.ssh = {
-    extraConfig = ''
-      Host zero-node
-        Hostname zero-node
-        User spec
-        IdentityFile ${sshKey}
-
-      Host shark-node
-        Hostname shark-node
-        User spec
-        IdentityFile ${sshKey}
-
-      Host nix-node
-        Hostname nix-node
-        User spec
-        IdentityFile ${sshKey}
-
-      Host torment-node
-        Hostname torment-node
-        User spec
-        IdentityFile ${sshKey}
-    '';
   };
 
   #nfs stuff
