@@ -7,13 +7,17 @@
   lib,
   pkgs,
   ...
-}: {
+}: 
+let
+  sshKey = "/home/spec/.ssh/sharkey67";
+in
+{
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./sudoless.nix
     ./gpu.nix
-    ./llama.nix
+    ./llm.nix
     ./mouse.nix
   ];
 
@@ -218,23 +222,92 @@
     hunspellDicts.en_US
     hyphenDicts.en_US
   ];
-
   programs = {
+    #ssh config
+    ssh = {
+      systemd-ssh-proxy.enable = false;
+      extraConfig = ''
+        Host zero-node
+          Hostname zero-node
+          User spec
+          IdentityFile ${sshKey}
+
+        Host shark-node
+          Hostname shark-node
+          User spec
+          IdentityFile ${sshKey}
+
+        Host nix-node
+          Hostname nix-node
+          User spec
+          IdentityFile ${sshKey}
+
+        Host torment-node
+          Hostname torment-node
+          User spec
+          IdentityFile ${sshKey}
+      '';
+    };
+
     hyprland = {
       enable = true;
       withUWSM = true;
       xwayland.enable = true;
     };
+
     firefox = {
       enable = true;
       package = pkgs.firefox.override { version = "158.0"; };
     };
+
     sharktasks = {
       enable = true;
       settings = {
         port = 8089;
         host = "http://torment-node";
       };
+    };
+
+    #fish config
+    fish = {
+      enable = true;
+      interactiveShellInit = ''
+        alias update="sudo nix flake update nixvim --flake /etc/nixos && sudo nixos-rebuild switch --flake /etc/nixos"
+        alias upgrade="sudo nix flake update --flake /etc/nixos && sudo nixos-rebuild switch --flake /etc/nixos --upgrade"
+        alias nix-test="sudo nixos-rebuild test"
+        alias config="sudo nvim /etc/nixos/configuration.nix";
+        alias nomad="/home/spec/Projects/python/nomadnet/.venv/bin/nomadnet"
+      '';
+    };
+
+    steam = {
+      remotePlay.openFirewall = true;
+      dedicatedServer.openFirewall = true;
+    };
+
+    #git config
+    git = {
+      enable = true;
+      config = {
+        user = {
+          name = "spectrum36";
+          email = "aidanrm36@gmail.com";
+        };
+        init.defaultBranch = "main";
+      };
+    };
+    #obs stuff
+    obs-studio = {
+      enable = true;
+      package = pkgs.obs-studio.override { cudaSupport = true; };
+
+      plugins = with pkgs.obs-studio-plugins; [
+        wlrobs
+        obs-pipewire-audio-capture
+        obs-vkcapture
+        obs-gstreamer
+        obs-backgroundremoval
+      ];
     };
   };
 
@@ -290,35 +363,6 @@
 
   services.tailscale.enable = true;
 
-  programs.steam = {
-    remotePlay.openFirewall = true;
-    dedicatedServer.openFirewall = true;
-  };
-
-  #fish config
-  programs.fish = {
-    enable = true;
-    interactiveShellInit = ''
-      alias update="sudo nix flake update nixvim --flake /etc/nixos && sudo nixos-rebuild switch --flake /etc/nixos"
-      alias upgrade="sudo nix flake update --flake /etc/nixos && sudo nixos-rebuild switch --flake /etc/nixos --upgrade"
-      alias nix-test="sudo nixos-rebuild test"
-      alias config="sudo nvim /etc/nixos/configuration.nix";
-      alias nomad="/home/spec/Projects/python/nomadnet/.venv/bin/nomadnet"
-    '';
-  };
-
-  #git stuff
-  programs.git = {
-    enable = true;
-    config = {
-      user = {
-        name = "spectrum36";
-        email = "aidanrm36@gmail.com";
-      };
-      init.defaultBranch = "main";
-    };
-  };
-
   #xdg config for discord screenshare
   xdg.portal = {
     enable = true;
@@ -330,7 +374,6 @@
   };
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
-  programs.noisetorch.enable = true;
 
   #easyeffects stuff
   programs.dconf.enable = true;
@@ -362,18 +405,4 @@
 
   #enable docker service
   virtualisation.docker.enable = true;
-
-  #obs
-  programs.obs-studio = {
-    enable = true;
-    package = pkgs.obs-studio.override { cudaSupport = true; };
-
-    plugins = with pkgs.obs-studio-plugins; [
-      wlrobs
-      obs-pipewire-audio-capture
-      obs-vkcapture
-      obs-gstreamer
-      obs-backgroundremoval
-    ];
-  };
 }

@@ -16,6 +16,7 @@
     sharktasks.url = "github:spectrum36/shark-task";
     opencode.url = "github:anomalyco/opencode/v2.0.9";
     hermes-agent.url = "github:NousResearch/hermes-agent";
+    strata.url = "github:Yunor743/strata.nix";
   };
 
   outputs = {
@@ -26,6 +27,7 @@
     sharktasks,
     opencode,
     sops-nix,
+    strata,
     hermes-agent,
     ...
     }@inputs:
@@ -37,6 +39,7 @@
       specialArgs = { inherit inputs; };
       modules = [
         ./configuration.nix
+        strata.nixosModules.nix
         inputs.sops-nix.nixosModules.sops
         inputs.hermes-agent.nixosModules.default
         sharktasks.nixosModules.default

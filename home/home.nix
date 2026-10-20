@@ -1,7 +1,6 @@
 { config, pkgs, ... }: {
   imports = [
     ./hermes.nix
-    ./ssh.nix
   ];
   programs.home-manager.enable = true;
   home = {
