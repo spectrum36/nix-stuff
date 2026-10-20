@@ -1,4 +1,4 @@
-{ config, pkgs, lib, hermes-agent, inputs, ... }: {
+{ config, pkgs, lib, hermes-agent, hermesSopsPath, ... }: {
   imports = [
     hermes-agent.homeManagerModules.default
   ];
@@ -8,13 +8,12 @@
   services.hermes-agent = {
     enable = true;
     gateway.enable = true;
-
-    # Secret env vars from sops-nix (decrypted .env file with KEY=VALUE pairs)
-    environmentFiles = [ config.sops.secrets."hermes-discord".path ];
-
+    environmentFiles = [ hermesSopsPath ];
     settings = {
       model.default = "qwen3.6-35b-a3b";
       model.base_url = "http://localhost:8080/v1";
+      web.search_backend = "searxng";
+      web.extract_backend = "firecrawl";
     };
   };
 }

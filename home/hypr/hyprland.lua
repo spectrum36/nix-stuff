@@ -74,6 +74,7 @@ hl.bind(mainmod .. " + SHIFT + 9", hl.dsp.window.move({workspace = "9"}))
 hl.animation({leaf = "global", enabled = false})
 
 --window rules
+hl.window_rule(app = "kitty", tile = true)
 
 --workspace rules
 hl.workspace_rule({workspace = "1", monitor = "eDP-1"})
