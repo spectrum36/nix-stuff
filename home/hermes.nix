@@ -10,6 +10,15 @@
     enable = true;
     gateway.enable = true;
     environmentFiles = [ hermesSopsPath ];
+
+    extraPackages = [ pkgs.mcp-nixos ];
+
+    mcpServers = {
+      nixos = {
+        command = "${pkgs.mcp-nixos}/bin/mcp-nixos";
+      };
+    };
+
     settings = {
       model = {
         default = "qwen3.6-35b-a3b";

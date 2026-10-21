@@ -1,7 +1,7 @@
 { pkgs, ... }: {
   services = {
     llama-cpp = {
-      enable = false;
+      enable = true;
       package = pkgs.llama-cpp.override { 
         cudaSupport = true;
       };
@@ -15,9 +15,22 @@
           };
           "qwen3.6-35b-a3b" = {
             hf-repo = "unsloth/Qwen3.6-35B-A3B-GGUF";
-            #hf-file = "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf";
             hf-file = "Qwen3.6-35B-A3B-UD-Q6_K.gguf";
             alias = "qwen3.6-35b-a3b";
+            ctx-size = "534288";
+            rope-scaling = "yarn";
+            rope-scale = "2";
+            yarn-orig-ctx = "262144";
+            temp = "1.0";
+            top-p = "0.95";
+            top-k = "20";
+            min-p = "0.0";
+            presence-penalty = "0.0";
+          };
+          "qwen3.8-35b-a3b" = {
+            hf-repo = "empero-ai/Qwen3.8-35B-A3B-Distill-GGUF";
+            hf-file = "Qwen3.8-35B-A3B-Q4_K_M.gguf";
+            alias = "qwen3.8-35b-a3b";
             ctx-size = "262144";
             rope-scaling = "yarn";
             rope-scale = "2";
@@ -27,7 +40,7 @@
             top-k = "20";
             min-p = "0.0";
             presence-penalty = "0.0";
-          }; 
+          };
           "qwen3.5-4b" = {
             hf-repo = "Qwen/Qwen3.5-4B-GGUF";
             hf-file = "Qwen3.5-4B-Q4_K_M.gguf";
@@ -41,19 +54,6 @@
         };
         # router server loads at most 4 models by default; keep all 5 resident
         models-max = 0;
-      };
-    };
-    strata = {
-      enable = true;
-      family = "qwen";
-      model = "IQ3_XXS";
-      context = "131072";
-      host = "127.0.0.1";
-      port = 8090;
-      sampling = {
-        temperature = 1.0;
-        top_p = 0.95;
-        top_k = 20;
       };
     };
   };

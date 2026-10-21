@@ -62,8 +62,7 @@ in
     }
   ];
   nix.settings = {
-    cores = 8;
-    max-jobs = 4;
+    cores = 16;
   };
 
   networking = {
