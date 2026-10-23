@@ -1,4 +1,4 @@
-aaa testing git stuff lol{
+{
   description = "nixslop and flakeslop";
 
   inputs = {
