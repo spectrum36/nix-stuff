@@ -12,21 +12,20 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixvim.url = "github:spectrum36/shark-nixvim";
-    septabee.url = "github:Ap6661/septabee-flake";
     sharktasks.url = "github:spectrum36/shark-task";
     opencode.url = "github:anomalyco/opencode/v2.0.9";
     hermes-agent.url = "github:NousResearch/hermes-agent";
-    };
+  };
 
   outputs = {
-    self,
-    nixpkgs,
-    home-manager,
-    nixvim,
-    sharktasks,
-    opencode,
-    sops-nix,
     hermes-agent,
+    home-manager,
+    nixpkgs,
+    nixvim,
+    opencode,
+    self,
+    sharktasks,
+    sops-nix,
     ...
     }@inputs:
     let
@@ -36,28 +35,30 @@
       inherit system;
       specialArgs = { inherit inputs; };
       modules = [
-        ./configuration.nix
-        inputs.sops-nix.nixosModules.sops
-        inputs.hermes-agent.nixosModules.default
-        sharktasks.nixosModules.default
-        home-manager.nixosModules.home-manager {
-          home-manager = {
-            useGlobalPkgs = true;
-            useUserPackages = true;
-            extraSpecialArgs = {
-              inherit inputs;
-              hermes-agent = inputs.hermes-agent;
+          ./configuration.nix
+          ./llm.nix
+          ./mouse.nix
+          ./sudoless.nix
+          sops-nix.nixosModules.sops
+          hermes-agent.nixosModules.default
+          sharktasks.nixosModules.default
+          home-manager.nixosModules.home-manager {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              extraSpecialArgs = {
+                inherit inputs;
+                hermes-agent = inputs.hermes-agent;
+              };
+              users.spec = import ./home/home.nix;
             };
-            users.spec = import ./home/home.nix;
-          };
-        }
-        { environment.systemPackages = [
-            inputs.septabee.packages.${system}.default
-            nixvim.packages.${system}.default
-            nixvim.packages.${system}.pvim
-            inputs.opencode.packages.${system}.default
-          ];
-        }
+          }
+          { environment.systemPackages = [
+              nixvim.packages.${system}.default
+              nixvim.packages.${system}.pvim
+              opencode.packages.${system}.default
+            ];
+          }
       ];
     };
   };

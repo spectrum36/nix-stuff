@@ -6,6 +6,7 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }: 
 let
@@ -15,17 +16,13 @@ in
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    ./sudoless.nix
-    ./gpu.nix
-    ./llm.nix
-    ./mouse.nix
   ];
 
   # SOPS for encrypted secrets (Discord bot credentials)
   sops = {
     age.keyFile = "/home/spec/.config/sops/age/keys.txt";
     secrets."hermes-agent" = {
-      sopsFile = ./secrets/discord.env.sops;
+      sopsFile = ./secrets/hermes.env.sops;
       owner = "spec";
       group = "users";
       # sops-nix decrypts this to /run/secrets/hermes-discord
@@ -53,6 +50,8 @@ in
     kernelPackages = pkgs.linuxPackages_7_2;
     supportedFilesystems = [ "nfs" ];
   };
+
+  powerManagement.cpuFreqGovernor = "performance";
 
   #temp settings to build cuda
   swapDevices = [
@@ -209,8 +208,6 @@ in
     docker
     docker-compose
     tmux
-    #koboldcpp
-    (pkgs.llama-cpp.override { cudaSupport = true; })
     vlc
     libX11
     bluetuith
@@ -339,12 +336,12 @@ in
     };
     nvidia = {
       modesetting.enable = true;
-      powerManagement.enable = true; # enable if you get graphical issues
+      powerManagement.enable = false; # enable if you get graphical issues
       powerManagement.finegrained = false;
       open = true;
       nvidiaSettings = true;
       package = config.boot.kernelPackages.nvidiaPackages.latest;
-
+      dynamicBoost.enable = true;
       prime = {
         sync.enable = true;
         intelBusId = "PCI:0:2:0";
@@ -354,7 +351,6 @@ in
   };
 
 
-  powerManagement.cpuFreqGovernor = "performance";
   services.thermald.enable = true;
 
   #nerdfonts

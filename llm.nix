@@ -17,10 +17,10 @@
             hf-repo = "unsloth/Qwen3.6-35B-A3B-GGUF";
             hf-file = "Qwen3.6-35B-A3B-UD-Q6_K.gguf";
             alias = "qwen3.6-35b-a3b";
-            ctx-size = "534288";
+            ctx-size = "262144";
             rope-scaling = "yarn";
             rope-scale = "2";
-            yarn-orig-ctx = "262144";
+            yarn-orig-ctx = "131072";
             temp = "1.0";
             top-p = "0.95";
             top-k = "20";
