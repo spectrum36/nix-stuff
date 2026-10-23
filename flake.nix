@@ -15,6 +15,10 @@
     sharktasks.url = "github:spectrum36/shark-task";
     opencode.url = "github:anomalyco/opencode/v2.0.9";
     hermes-agent.url = "github:NousResearch/hermes-agent";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    import-tree.url = "github:vic/import-tree";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    import-tree.url = "github:vic/import-tree";
   };
 
   outputs = {
