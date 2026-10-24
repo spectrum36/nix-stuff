@@ -195,7 +195,6 @@ in
     grim
     hyprpaper
     kitty
-    noctalia-shell
     xdg-desktop-portal-hyprland
     xdg-desktop-portal-gtk
     slurp
@@ -254,7 +253,7 @@ in
 
     firefox = {
       enable = true;
-      package = pkgs.firefox.override { version = "158.0"; };
+      #package = pkgs.firefox.override { version = "158.0"; };
     };
 
     sharktasks = {

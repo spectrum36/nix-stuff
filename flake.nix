@@ -11,6 +11,7 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    noctalia.url = "github:noctalia-dev/noctalia";
     nixvim.url = "github:spectrum36/shark-nixvim";
     sharktasks.url = "github:spectrum36/shark-task";
     opencode.url = "github:anomalyco/opencode/v2.0.9";
@@ -24,6 +25,7 @@
     home-manager,
     nixpkgs,
     nixvim,
+    noctalia,
     opencode,
     self,
     sharktasks,
@@ -33,10 +35,10 @@
     let
       system = "x86_64-linux";
     in {
-    nixosConfigurations.nix-nexus = nixpkgs.lib.nixosSystem {
-      inherit system;
-      specialArgs = { inherit inputs; };
-      modules = [
+      nixosConfigurations.nix-nexus = nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = { inherit inputs; };
+        modules = [
           ./configuration.nix
           ./llm.nix
           ./mouse.nix
@@ -55,13 +57,15 @@
               users.spec = import ./home/home.nix;
             };
           }
-          { environment.systemPackages = [
+          { 
+            environment.systemPackages = [
               nixvim.packages.${system}.default
               nixvim.packages.${system}.pvim
               opencode.packages.${system}.default
+              noctalia.packages.${system}.default
             ];
           }
-      ];
+        ];
     };
   };
 }
