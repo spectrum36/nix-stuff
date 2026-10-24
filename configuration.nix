@@ -217,6 +217,7 @@ in
     hunspell
     hunspellDicts.en_US
     hyphenDicts.en_US
+    git-filter-repo
   ];
   programs = {
     #ssh config
